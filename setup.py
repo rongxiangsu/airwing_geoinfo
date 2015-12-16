@@ -24,7 +24,7 @@ AUTHOR = "wushi"
 
 AUTHOR_EMAIL = "hfutsrx@gmail.com"
 
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 
 URL = "https://github.com/surongxiang/airwing_geoinfo"
 
