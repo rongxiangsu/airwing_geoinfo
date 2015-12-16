@@ -10,11 +10,11 @@ except:
 def read(fname):
     return codecs.open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-NAME = "airwing_gwc"
+NAME = "airwing_geoinfo"
 
-PACKAGES = ["airwing_gwc"]
+PACKAGES = ["airwing_geoinfo"]
 
-DESCRIPTION = "this is a package for auto generating tile layers in geosever"
+DESCRIPTION = "this is a package for getting geoinfo in geoserver"
 
 LONG_DESCRIPTION = read("README.rst")
 
@@ -24,9 +24,9 @@ AUTHOR = "wushi"
 
 AUTHOR_EMAIL = "hfutsrx@gmail.com"
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
-URL = "https://github.com/surongxiang/airwing_gwc"
+URL = "https://github.com/surongxiang/airwing_geoinfo"
 
 LICENSE = "MIT"
 

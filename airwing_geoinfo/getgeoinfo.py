@@ -1,33 +1,21 @@
-import pycurl
-import re
-import StringIO
+import requests
 
-def getGeoinfo(workspaceUrl, user, name, data, GLOBAL_UNAME, GLOBAL_PWD):
-	curl = pycurl.Curl()
-	y = workspaceUrl + user + '/coveragestores/' + name + "/coverages/" + name + ".html"
-	buf = StringIO.StringIO()
-	curl.setopt(pycurl.WRITEFUNCTION, buf.write)
-	curl.setopt(pycurl.URL, y)
-	curl.setopt(pycurl.HTTPHEADER, ['Content-Type:application/json'])
-	curl.setopt(pycurl.USERPWD, GLOBAL_UNAME + ":" + GLOBAL_PWD)
-	curl.perform()
-	thePage = buf.getvalue()
-	reObj1 = re.compile('<li>[\s\S]*?</li>')
-	if thePage[0:2] != '<!':
-		print "Get geoinfo failed." + thePage
-		return
-	geoInfo = reObj1.findall(thePage)[-1].split('[')[-1].split(']')[0].split(',')
-	longitute = geoInfo[0].split(':')
-	latitude = geoInfo[-1].split(':')
-	latitude[0] = latitude[0].strip()
-	latitude[1] = latitude[1].strip()
-	longitute[0] = longitute[0].strip()
-	longitute[1] = longitute[1].strip()
-	newgeoInfo = {
-		'left_longitude':longitute[1],
-		'left_latitude':latitude[1],
-		'right_longitude':longitute[0],
-		'right_latitude':latitude[0]
+def getGeoinfo(service_url, user, name, data, geo_user, geo_pwd):
+	s = requests.Session()
+	data = {
+		'username': geo_user,
+		'password': geo_pwd
 	}
-	buf.close()
+	service_url = service_url.split('/rest')[0]
+	s.post(service_url+'/j_spring_security_check', data=data, allow_redirects=False)
+	y = service_url + '/rest/workspaces/' + user + '/coveragestores/' + name + "/coverages/" + name + ".json"
+	geoinfo = s.get(y, allow_redirects=False).json()
+	geoinfo = geoinfo['coverage']['latLonBoundingBox']
+	print geoinfo['minx']
+	newgeoInfo = {
+		'left_longitude': geoinfo['minx'],
+		'left_latitude': geoinfo['miny'],
+		'right_longitude': geoinfo['maxx'],
+		'right_latitude': geoinfo['maxy']
+	}
 	return newgeoInfo
