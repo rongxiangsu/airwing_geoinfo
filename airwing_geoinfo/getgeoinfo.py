@@ -6,13 +6,11 @@ def getGeoinfo(service_url, workspace, task_id, geo_user, geo_pwd):
 		'username': geo_user,
 		'password': geo_pwd
 	}
-	if '/rest' in service_url:
-		service_url = service_url.split('/rest')[0]
 	s.post(service_url+'/j_spring_security_check', data=data, allow_redirects=False)
 	y = service_url + '/rest/workspaces/' + workspace + '/coveragestores/' + task_id + "/coverages/" + task_id + ".json"
 	res = s.get(y, allow_redirects=False)
 	if not res:
-		return {'status': 'error', 'reason': res.content}
+		return {'status': 'error', 'reason': res.text}
 	else:
 		geoinfo = res.json()
 		geoinfo = geoinfo['coverage']['latLonBoundingBox']
